@@ -67,8 +67,8 @@ Android 下载中间件
      * @return
      */
 	public static StateInfo execute(String url, CallBack callBack, boolean repeatDown){
-    ....
-  }
+    	....
+   	}
  
       ExecutorDownLoadReactor.execute(url,MainActivity.this,true);
  
