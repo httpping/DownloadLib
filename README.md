@@ -2,8 +2,8 @@
 Android 下载中间件
 ## 功能
 ### 1、支持断点续传下载
-### 2、下载成功后通过MD5等加密算法智能分析是否需要重新去服务器获取数据，解决流量
-
+### 2、下载成功后通过MD5等加密算法智能分析是否需要重新去服务器获取数据，节约重复下载流量
+### 3、支持强制重复下载
 # init
 ## init环境
  ExecutorDownLoadReactor.newFixedThreadPool(1).initEnv(Application);
