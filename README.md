@@ -74,15 +74,15 @@ Android 下载中间件
  
 ## 4、查看是否下载过
 ### Api
-  /**
-  * 判断url 是否下载成功，如果不为null 则表示下载成功	
-  * @param url
-  * @return
-  */
-  public static String getFilePathForUrl(String url ){
-	...				 
-  }
+ 	 /**
+ 	 * 判断url 是否下载成功，如果不为null 则表示下载成功	
+	  * @param url
+	  * @return
+	  */
+		public static String getFilePathForUrl(String url ){
+		...				 
+		}
   
 #### use
-  ExecutorDownLoadReactor.getFilePathForUrl(url)
+  	ExecutorDownLoadReactor.getFilePathForUrl(url)
   
