@@ -1,5 +1,8 @@
 # DownloadLib
 Android 下载中间件
+## 功能
+   1、支持断点续传下载
+   2、下载成功后可避免重复下载
 
 # init
 ## init环境
