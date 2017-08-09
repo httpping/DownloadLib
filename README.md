@@ -11,7 +11,7 @@ Android 下载中间件
  ## 1、下载
      ExecutorDownLoadReactor.execute(url ,MainActivity.this);
  ### 下载进度获取
-   ExecutorDownLoadReactor.execute(url, new CallBack() {
+  	 ExecutorDownLoadReactor.execute(url, new CallBack() {
             @Override
             public void update(Observable observable, Object o) {
                 if (observable instanceof StateInfo) {
