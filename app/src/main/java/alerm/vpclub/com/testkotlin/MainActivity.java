@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements CallBack {
             }
         });
 
+        for (int i=0;i<1000;i++){
+            ExecutorDownLoadReactor.execute(url,MainActivity.this,true);
+        }
+
     }
 
 
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements CallBack {
 
 
             }
-            if (info.isError()) {
+            if (info.isError() || info.stop) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements CallBack {
                 });
 
 
-                Log.d(TAG, Thread.currentThread().getName()+"size =" + info.size + ",进度 =" + info.getProgress() +" 速度：" + info.getSpeed() +"Kb/s" + " 完成："+info.isComplete() + " error="+ info.isError() +" errorinfo=" +info.getErrorInfo());
+                Log.d(TAG, Thread.currentThread().getName()+"  size =" + info.size + ",进度 =" + info.getProgress() +" 速度：" + info.getSpeed() +"Kb/s" + " 完成："+info.isComplete() + " error="+ info.isError() +" errorinfo=" +info.getErrorInfo());
             }
 
         }

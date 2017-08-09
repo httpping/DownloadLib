@@ -389,6 +389,8 @@ class DownLoad implements Runnable {
 				info.update();
 				System.out.println(info.url + " -- " + threadName + " -- md5："
 						+ md5 + " -- download 线程结束了" + num);
+
+				ExecutorDownLoadReactor.getInstance().clearFuture();//清理缓存数据
 			}
 		}
 		return;

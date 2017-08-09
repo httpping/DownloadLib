@@ -15,7 +15,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
         //init环境
-        ExecutorDownLoadReactor.newFixedThreadPool(3).initEnv(this);
+        ExecutorDownLoadReactor.newFixedThreadPool(1).initEnv(this);
 
     }
 }

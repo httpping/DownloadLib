@@ -9,12 +9,17 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 
 import alerm.vpclub.com.download.utils.Constants;
+import alerm.vpclub.com.download.utils.DownLoadStateBind;
 import alerm.vpclub.com.download.utils.FileUtils;
 import alerm.vpclub.com.download.utils.Util;
 
@@ -49,6 +54,7 @@ public class  ExecutorDownLoadReactor {
 	public  Map<String, Object> fileLock = new HashMap<String, Object>(); // 文件锁控制同一个url 只允许一把锁
 	public  Map<String, StateInfo> fileStateInfo = new HashMap<String, StateInfo>(); // 文件锁控制同一个url 只允许一把锁
 
+	public  Map<String, List> allFuture = new HashMap<String, List>(); // 所有的future
 	private ExecutorService executors ;
 
 	public static String ROOT_FILE_PATH  ;
@@ -229,8 +235,12 @@ public class  ExecutorDownLoadReactor {
 		stateInfo.isRepeatDown= repeatDown;
 		stateInfo.addObserver(callBack); // 注册观察者
 		DownLoad downLoad = new DownLoad(stateInfo);
-		//Future<?> future = pool.executors.submit(downLoad);
-		pool.executors.execute(downLoad);
+		Future<?> future = pool.executors.submit(downLoad);
+		pool.addFuture(url,future,stateInfo);
+
+//		pool.executors.execute(downLoad);
+
+//		future.cancel()
 		 
 		return stateInfo;
 	}
@@ -256,12 +266,13 @@ public class  ExecutorDownLoadReactor {
 		stateInfo.isRepeatDown =false;
 		stateInfo.addObserver(callBack); // 注册观察者
 		DownLoad downLoad = new DownLoad(stateInfo);
-		//Future<?> future = pool.executors.submit(downLoad);
-		pool.executors.execute(downLoad);
-		 
+		Future<?> future = pool.executors.submit(downLoad);
+//		pool.executors.execute(downLoad);
+		pool.addFuture(url,future,stateInfo);
+
 		return stateInfo;
 	}
-	
+
 	
 	 /**
      * 传人url 执行下载任务，重新下载
@@ -283,8 +294,9 @@ public class  ExecutorDownLoadReactor {
 		stateInfo.maxWaitTime = maxWaitTime;
 		stateInfo.addObserver(callBack); // 注册观察者
 		DownLoad downLoad = new DownLoad(stateInfo);
-		pool.executors.execute(downLoad);
-		
+		Future future = pool.executors.submit(downLoad);
+		pool.addFuture(url,future,stateInfo);
+
 		return stateInfo;
 	}
 	
@@ -379,8 +391,68 @@ public class  ExecutorDownLoadReactor {
 		if (info !=null){
 			info.stop = true;//停止
 		}
+
+		pool.cancelFuture(url);
+
+//		pool.executors.submit()
 	}
 
+
+
+	/**
+	 * 添加future
+	 * @param url
+	 * @param future
+	 */
+	public  synchronized void addFuture(String url,Future future,StateInfo stateInfo){
+		String md5 = Util.getMd5(url);
+		List<DownLoadStateBind> lists = pool.allFuture.get(md5);
+		if (lists ==null){
+			lists = new LinkedList<>();
+		}
+		DownLoadStateBind bind = new DownLoadStateBind(stateInfo,future);
+		lists.add(bind);
+		pool.allFuture.put(md5,lists);
+
+	}
+
+	public synchronized  void cancelFuture(String url){
+		String md5 = Util.getMd5(url);
+		List<DownLoadStateBind> lists = pool.allFuture.get(md5);
+		if (lists !=null){
+			for (DownLoadStateBind bind : lists){
+				bind.future.cancel(true);
+				bind.stateInfo.stop = true;
+				bind.stateInfo.update();//更新状态
+			}
+		}
+		pool.allFuture.remove(md5);//删除
+	}
+
+	/**
+	 * 清理垃圾数据
+	 */
+	public synchronized void clearFuture(){
+
+		Set<String> keys = pool.allFuture.keySet();
+		for (String key:keys){
+			List<DownLoadStateBind> lists = pool.allFuture.get(key);
+			if (lists !=null){
+				List<DownLoadStateBind> datas = new LinkedList<>();
+				for (DownLoadStateBind bind : lists){
+					if (bind.future.isCancelled() || bind.future.isDone()){
+						datas.add(bind);
+					}
+				}
+				lists.removeAll(datas);
+
+				if (lists.size() ==0){
+					//删除掉无用数据
+					pool.allFuture.remove(key);
+				}
+			}
+		}
+	}
 	
 	/**
 	 * 关闭
