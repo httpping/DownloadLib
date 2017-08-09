@@ -2,8 +2,8 @@
 Android 下载中间件
 
 # init
- //init环境
- ExecutorDownLoadReactor.newFixedThreadPool(1).initEnv(this);
+## init环境
+ ExecutorDownLoadReactor.newFixedThreadPool(1).initEnv(Application);
  
  下载默认使用路径为cache dir 中建的 download目录
  
