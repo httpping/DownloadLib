@@ -66,9 +66,9 @@ Android 下载中间件
      * repeatdown = true 重新下载不管以前的文件
      * @return
      */
-	public static StateInfo execute(String url, CallBack callBack, boolean repeatDown){
-    	....
-   	}
+		public static StateInfo execute(String url, CallBack callBack, boolean repeatDown){
+    		....
+   		}
  
       ExecutorDownLoadReactor.execute(url,MainActivity.this,true);
  
