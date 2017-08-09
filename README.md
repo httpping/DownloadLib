@@ -26,7 +26,7 @@ Android 下载中间件
       ExecutorDownLoadReactor.execute(url,MainActivity.this,true);
  
 ## 4、查看是否下载过
-   ### api
+### Api
   /**
   * 判断url 是否下载成功，如果不为null 则表示下载成功	
   * @param url
@@ -36,6 +36,6 @@ Android 下载中间件
 	...				 
   }
   
-  #### use
+#### use
   ExecutorDownLoadReactor.getFilePathForUrl(url)
   
