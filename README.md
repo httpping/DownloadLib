@@ -26,37 +26,16 @@ Android 下载中间件
       ExecutorDownLoadReactor.execute(url,MainActivity.this,true);
  
 ## 4、查看是否下载过
-   /**
+   ### api
+  /**
   * 判断url 是否下载成功，如果不为null 则表示下载成功	
   * @param url
   * @return
   */
   public static String getFilePathForUrl(String url ){
-		if (url == null) {
-			return null;
-		}
-		
-		String path =null;
-		File file = null ;
-		try {
-			if (getRootFilePath() != null  ) {
-				path  = getRootFilePath() +"/" + Util.getMd5(url);
-				file = new File(path);
-			}
-			// DIR_LOGO
-			
-			//ExecutorDownLoadReactor.
-			if (file != null && file.exists()) {
-				return file.getPath();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		
-		
-		return null; 
-
-	}
+	...				 
+  }
   
+  #### use
+  ExecutorDownLoadReactor.getFilePathForUrl(url)
   
